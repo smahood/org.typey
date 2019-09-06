@@ -1,0 +1,9 @@
+{:deps  {org.clojure/clojure {:mvn/version "1.10.0"}
+         }
+ :paths ["src" "resources"]
+ :aliases
+        {:rebl
+         {:extra-deps
+          {org.clojure/clojure    {:mvn/version "1.10.0"}
+           org.clojure/core.async {:mvn/version "0.4.490"}
+           com.cognitect/rebl     {:local/root "REBL-0.9.149.jar"}}}}}

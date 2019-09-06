@@ -1,19 +1,22 @@
 (ns typey.qmk.defs
   (:require [clojure.string :as str]
             [clojure.java.shell :refer [sh with-sh-dir]]
-            [typey.qmk.visualizer :as vis]
             [typey.qmk.layers :as layers]
-            [typey.qmk.buffer :as buffer]
-            [typey.qmk.bigraphs :as bigraphs]))
-
+            [typey.qmk.buffer :as buffer]))
 
 (def keyboard "ergodox_infinity")
+
 (def layout "shaun")
+
 (def qmk-firmware-path "../qmk_firmware")
+
 (def keymap-output-path
   (str/join "/" [qmk-firmware-path "keyboards" keyboard "keymaps" layout]))
+
 (def keyboard-layout (str keyboard ":" layout))
+
 (def serial-number "mk20dx256vlh7")
+
 (def bin-file (str/replace (str keyboard "_" layout ".bin") #"-" "_"))
 
 (defn includes []
@@ -25,6 +28,7 @@
              "#include \"keymap_steno.h\""
              ""]))
 
+
 (defn defines []
   (str/join "\n"
             ["#define BUF_START 0"
@@ -32,8 +36,7 @@
              ""]))
 
 
-(defn make-enums [symbols bigraphs macros]
-  ; bigraphs will look like ["a" "b"]
+(defn make-enums [symbols macros]
   (str/join
     "\n"
     [(str "enum custom_keycodes {\n"
@@ -42,24 +45,10 @@
           "N, O, P, Q, R, S, T, U, V, W, X, Y, Z, COMM, DOT, MINS, COLON, QUOT, "
           "PRNB, LAYER1, LAYER2, LAYER3, LAYER4, LAYER5, "
           "BETTER_SFT, "
-          (str/join
-            ", "
-            (concat
-              (map #(str (first %))
-                   symbols)))
-          ;", "
-          ;(str/join
-          ;  ", "
-          ;  (concat
-          ;    (map #(str (str/upper-case (first %)) (str/upper-case (second %)))
-          ;         bigraphs)))
+          (str/join ", " (concat (map #(str (first %)) symbols)))
           ", "
-          (str/join
-            ", "
-            (concat
-              (map first macros))))
-     "};"
-     ""]))
+          (str/join ", " (concat (map first macros))))
+     "};" ""]))
 
 
 (defn vars []
@@ -70,7 +59,6 @@
              "bool shift_used;"
              "int max_buffer_used = 0;"
              ""
-
              "struct single_buffer {"
              "  uint8_t row;"
              "  uint8_t col;"
@@ -91,10 +79,11 @@
   (str/join "\n"
             ["// Runs just one time when the keyboard initializes."
              "void matrix_init_user(void) {"
-             "  steno_set_mode(STENO_MODE_GEMINI); // (or STENO_MODE_BOLT STENO_MODE_GEMINI)"
+             "  steno_set_mode(STENO_MODE_GEMINI);"
              "  init_all_buffers();"
              "}"
              ""]))
+
 
 (defn matrix-scan []
   (str/join "\n"
@@ -122,8 +111,6 @@
              ""]))
 
 
-
-
 (defn buffered-functions []
   (str/join "\n\n"
             [(buffer/init_buffer_position)
@@ -140,12 +127,8 @@
              (buffer/buffer_pos_to_pop)
              (buffer/push_modded_buffer)
              (buffer/push_buffer)
-
-             ;pop_buffer_no_release
              (buffer/pop_buffer_no_execute)
              (buffer/modded_buffer_key)
-             ;buffer_key_no_release
              (buffer/buffered_key_with_layer)
-             ;(bigraphs/bigraph_key)
              (layers/better_layer_toggle)
              ]))

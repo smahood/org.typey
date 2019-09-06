@@ -1,7 +1,6 @@
 (ns typey.qmk.core
   (:require [clojure.string :as str]
             [clojure.java.shell :refer [sh with-sh-dir]]
-            [typey.qmk.bigraphs :refer [bigraphs]]
             [typey.qmk.defs :as defs]
             [typey.qmk.keymaps.keymap-hybrid :as keymap-hybrid]
             [typey.qmk.layers :as layers]
@@ -10,11 +9,11 @@
             [typey.qmk.visualizer :as vis]))
 
 
-(defn buffered-keymap-c [layer-strings symbols bigraphs macros]
+(defn buffered-keymap-c [layer-strings symbols macros]
   (str/join "\n"
             [(defs/includes)
              (defs/defines)
-             (defs/make-enums symbols bigraphs macros)
+             (defs/make-enums symbols macros)
              (defs/vars)
              (defs/buffered-functions)
              (layers/wrap-keymaps
@@ -35,40 +34,27 @@
         (vis/simple_visualizer_c))
   (spit (str/join "/" [defs/keymap-output-path "keymap.c"])
         (buffered-keymap-c
-          (keymap-hybrid/key-defs) (shortcuts/shifted-symbols)
-          (bigraphs) (shortcuts/macros))))
+          (keymap-hybrid/key-defs) (shortcuts/shifted-symbols) (shortcuts/macros))))
 
 
-#_(defn make-linux-strings []
-    [(str "sudo make " defs/keyboard-layout)
-     (str "sudo make " defs/keyboard-layout " MASTER=right")])
-
-
-
-
-
-(def keyboard "ergodox_infinity")
-(def layout "shaun")
-(def qmk-firmware-path "../qmk_firmware")
-(def keymap-output-path
-  (str/join "/" [qmk-firmware-path "keyboards" keyboard "keymaps" layout]))
-(def keyboard-layout (str keyboard ":" layout))
-(def serial-number "mk20dx256vlh7")
-(def bin-file (str/replace (str keyboard "_" layout ".bin") #"-" "_"))
-
+(defn make-linux-strings []
+  [(str "sudo make " defs/keyboard-layout)
+   (str "sudo make " defs/keyboard-layout " MASTER=right")])
 
 
 (defn make-left-firmware []
-  (with-sh-dir qmk-firmware-path
+  (with-sh-dir defs/qmk-firmware-path
                (sh "make"
-                   keyboard-layout)))
+                   defs/keyboard-layout)))
 
-(defn write-firmware [] (with-sh-dir qmk-firmware-path
+
+(defn write-firmware [] (with-sh-dir defs/qmk-firmware-path
                                      (sh "dfu-util"
                                          "-D"
-                                         bin-file
+                                         defs/bin-file
                                          "-S"
-                                         serial-number)))
+                                         defs/serial-number)))
+
 
 (defn mac-make-and-write-left []
   (write-buffered-layout)
@@ -77,5 +63,6 @@
 
 (comment (mac-make-and-write-left))
 
+(comment (make-linux-strings))
 
 (write-buffered-layout)

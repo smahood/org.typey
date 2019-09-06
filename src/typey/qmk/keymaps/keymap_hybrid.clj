@@ -69,6 +69,7 @@
              (str/join ", " ["KC_NO "])
              (str/join ", " ["KC_NO " "STN_E  " "STN_U  "])]))
 
+
 (def lay0-keys
   [[["KC_ESC    " "J         " "Q         " "KC_QUOT   " "KC_GRV    "]
     ["KC_TAB    " "Y         " "O         " "U         " "KC_BSLS   "]
@@ -87,6 +88,7 @@
     ["          " "          "]
     ["          " "          "]
     ["KC_ENT    " "KC_SPACE  "]]])
+
 
 (def base-keys
   [[["KC_ESC    " "KC_J      " "KC_Q      " "KC_QUOT   " "KC_GRV    "]
@@ -108,8 +110,6 @@
     ["KC_ENT    " "KC_SPACE  "]]])
 
 
-
-
 (defn lay0 [hand row col]
   (-> lay0-keys
       (nth hand)
@@ -122,7 +122,6 @@
       (nth hand)
       (nth row)
       (nth col)))
-
 
 
 (defn key-defs []
@@ -148,7 +147,6 @@
         [(lay0 1 6 0) (lay0 1 6 1)]
         [(lay0 1 7 0) (lay0 1 7 1)]])
 
-     ;"b-sexp-in " "f-sexp-in " "f-sexp-out"
      ; Movement
      1
      (make-layer
@@ -423,7 +421,6 @@
         [(base 1 6 0) (base 1 6 1)]
         [(base 1 7 0) (base 1 7 1)]])
 
-
      ; I Layer
      14
      (make-layer
@@ -580,7 +577,7 @@
         [(base 0 1 0) (base 0 1 1) (base 0 1 2) (base 0 1 3) (base 0 1 4)]
         [(base 0 2 0) (base 0 2 1) (base 0 2 2) (base 0 2 3) (base 0 2 4)]
         [(base 0 3 0) (base 0 3 1) (base 0 3 2) (base 0 3 3) (base 0 3 4)]
-        [(base 0 4 0) "ASTRODON  " (base 0 4 2)]
+        [(base 0 4 0) (base 0 4 1) (base 0 4 2)]
         [(base 0 5 0) (base 0 5 1)]
         [(base 0 6 0) (base 0 6 1)]
         [(base 0 7 0) (base 0 7 1)]]
@@ -588,7 +585,7 @@
        [[(base 1 0 0) (base 1 0 1) "P         " (base 1 0 3) (base 1 0 4)]
         [(base 1 1 0) (base 1 1 1) (base 1 1 2) "PRINTLN   " (base 1 1 4)]
         [(base 1 2 0) (base 1 2 1) (base 1 2 2) (base 1 2 3) (base 1 2 4)]
-        ["BRONTOMERUS" (base 1 3 1) (base 1 3 2) (base 1 3 3) (base 1 3 4)]
+        [(base 1 3 0) (base 1 3 1) (base 1 3 2) (base 1 3 3) (base 1 3 4)]
         [(base 1 4 0) (base 1 4 1) (base 1 4 2)]
         [(base 1 5 0) (base 1 5 1)]
         [(base 1 6 0) (base 1 6 1)]
@@ -636,7 +633,6 @@
         [(base 1 6 0) (base 1 6 1)]
         [(base 1 7 0) (base 1 7 1)]])
 
-
      ; S layer
      24
      (make-layer
@@ -678,7 +674,6 @@
         [(base 1 5 0) (base 1 5 1)]
         [(base 1 6 0) (base 1 6 1)]
         [(base 1 7 0) (base 1 7 1)]])
-
 
      ; U layer
      26
